@@ -46,6 +46,7 @@ func MountAPI(router *mux.Router, storage Storage) {
 }
 
 func createOne(resp http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
 	vars := mux.Vars(req)
 	kind := vars["kind"]
 	enc := json.NewEncoder(resp)
@@ -68,7 +69,7 @@ func createOne(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	// set in storage
-	id, stoResp := s.Create(kind, resource)
+	id, stoResp := s.Create(req.Form, kind, resource)
 
 	// write response
 	resp.WriteHeader(stoResp.StatusCode)
@@ -79,12 +80,13 @@ func createOne(resp http.ResponseWriter, req *http.Request) {
 }
 
 func readAll(resp http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
 	vars := mux.Vars(req)
 	kind := vars["kind"]
 	enc := json.NewEncoder(resp)
 
 	// look for resources
-	resources, stoResp := s.GetAll(kind)
+	resources, stoResp := s.GetAll(req.Form, kind)
 
 	// write response
 	resp.WriteHeader(stoResp.StatusCode)
@@ -95,13 +97,14 @@ func readAll(resp http.ResponseWriter, req *http.Request) {
 }
 
 func readOne(resp http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
 	vars := mux.Vars(req)
 	kind := vars["kind"]
 	id := vars["id"]
 	enc := json.NewEncoder(resp)
 
 	// look for resource
-	resource, stoResp := s.Get(kind, id)
+	resource, stoResp := s.Get(req.Form, kind, id)
 
 	// write response
 	resp.WriteHeader(stoResp.StatusCode)
@@ -112,6 +115,7 @@ func readOne(resp http.ResponseWriter, req *http.Request) {
 }
 
 func updateOne(resp http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
 	vars := mux.Vars(req)
 	kind := vars["kind"]
 	id := vars["id"]
@@ -134,7 +138,7 @@ func updateOne(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	// update resource
-	stoResp := s.Update(kind, id, resource)
+	stoResp := s.Update(req.Form, kind, id, resource)
 
 	// write response
 	resp.WriteHeader(stoResp.StatusCode)
@@ -145,12 +149,13 @@ func updateOne(resp http.ResponseWriter, req *http.Request) {
 }
 
 func deleteAll(resp http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
 	vars := mux.Vars(req)
 	kind := vars["kind"]
 	enc := json.NewEncoder(resp)
 
 	// look for resources
-	stoResp := s.DeleteAll(kind)
+	stoResp := s.DeleteAll(req.Form, kind)
 
 	// write response
 	resp.WriteHeader(stoResp.StatusCode)
@@ -161,13 +166,14 @@ func deleteAll(resp http.ResponseWriter, req *http.Request) {
 }
 
 func deleteOne(resp http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
 	vars := mux.Vars(req)
 	kind := vars["kind"]
 	id := vars["id"]
 	enc := json.NewEncoder(resp)
 
 	// delete resource
-	stoResp := s.Delete(kind, id)
+	stoResp := s.Delete(req.Form, kind, id)
 
 	// write response
 	resp.WriteHeader(stoResp.StatusCode)

@@ -1,5 +1,9 @@
 package crudapi
 
+import (
+	"net/url"
+)
+
 // A StorageResponse is returned by Storage's methods. It sets the HTTP status code of the response and describes what kind of error occured, if any.
 type StorageResponse struct {
 	StatusCode int    // the HTTP status code that is returned to the client
@@ -14,20 +18,20 @@ type Storage interface {
 	// a interface{} is a resource (for example a JSON object or a database row with map indexes ~ column names)
 
 	// creates a resource and stores the data in it, then returns the ID
-	Create(string, interface{}) (string, StorageResponse)
+	Create(url.Values, string, interface{}) (string, StorageResponse)
 
 	// retrieves a resource
-	Get(string, string) (interface{}, StorageResponse)
+	Get(url.Values, string, string) (interface{}, StorageResponse)
 
 	// retrieves all resources of the specified kind
-	GetAll(string) ([]interface{}, StorageResponse)
+	GetAll(url.Values, string) ([]interface{}, StorageResponse)
 
 	// updates a resource
-	Update(string, string, interface{}) StorageResponse
+	Update(url.Values, string, string, interface{}) StorageResponse
 
 	// deletes a resource
-	Delete(string, string) StorageResponse
+	Delete(url.Values, string, string) StorageResponse
 
 	// delete all resources of a kind
-	DeleteAll(string) StorageResponse
+	DeleteAll(url.Values, string) StorageResponse
 }
