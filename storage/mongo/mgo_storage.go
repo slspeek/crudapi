@@ -1,7 +1,7 @@
 package mongo
 
 import "labix.org/v2/mgo"
-import "github.com/sauerbraten/crudapi"
+import "github.com/slspeek/crudapi"
 import "labix.org/v2/mgo/bson"
 
 type MongoStorage struct {

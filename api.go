@@ -61,22 +61,22 @@ func initHandling(req *http.Request, resp http.ResponseWriter, action Action) (a
 	params := req.URL.Query()
 	enc = json.NewEncoder(resp)
 
-	authenticatedAndAuthorized = authenticateAndAuthorize(action, vars, params, resp, enc)
+	authenticatedAndAuthorized = authenticateAndAuthorize(action, vars, params, resp, enc, req)
 
 	return
 }
 
 // authenticate request and authorize action
-func authenticateAndAuthorize(action Action, urlVars map[string]string, params url.Values, resp http.ResponseWriter, enc *json.Encoder) (ok bool) {
-	authenticated, client, errorMessage := g.Authenticate(params)
+func authenticateAndAuthorize(action Action, urlVars map[string]string, params url.Values, resp http.ResponseWriter, enc *json.Encoder, req *http.Request) (ok bool) {
+	authenticated, client, errorMessage := g.Authenticate(resp, req)
 	if !authenticated {
 		log.Println("unauthenticated request:\n\tURL parameters:", params, "\n\terror message:", errorMessage)
 
-		resp.WriteHeader(http.StatusUnauthorized)
-		err := enc.Encode(apiResponse{errorMessage, "", nil})
-		if err != nil {
-			log.Println(err)
-		}
+		//resp.WriteHeader(http.StatusUnauthorized)
+    err := enc.Encode(apiResponse{errorMessage, "", nil})
+    if err != nil {
+      log.Println(err)
+    }
 
 		return
 	}
